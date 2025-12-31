@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务评价 - 胡椒粉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .rating-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .overall-rating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 10px;
+            font-size: 48px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+            transform: scale(1.2);
+        }
+
+        .rating-text {
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .dimension-ratings {
+            display: grid;
+            gap: 20px;
+        }
+
+        .dimension {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .dimension:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .dimension-name {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .dimension-stars {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+        }
+
+        .comment-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-field {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .reviews-list {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .review-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .review-rating {
+            color: #ffc107;
+            font-size: 18px;
+        }
+
+        .review-time {
+            color: #999;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .review-comment {
+            color: #555;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .dimension-scores {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .dimension-score {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .user-info {
+                grid-template-columns: 1fr;
+            }
+
+            .stars {
+                font-size: 36px;
+            }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+            animation: slideInRight 0.4s ease-out, fadeOut 0.4s ease-out 2.6s;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="avatar">椒粉</div>
+            <h1>胡椒粉的服务评价</h1>
+            <p>真诚的评价是最好的鼓励 💫</p>
+        </div>
+
+        <div class="content">
+            <!-- 统计数据 -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-number" id="avgRating">0.0</div>
+                    <div class="stat-label">平均评分</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReviews">0</div>
+                    <div class="stat-label">总评价数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="recommendRate">0%</div>
+                    <div class="stat-label">推荐率</div>
+                </div>
+            </div>
+
+            <!-- 整体评分 -->
+            <div class="rating-section">
+                <div class="section-title">整体评分</div>
+                <div class="overall-rating">
+                    <div class="stars" id="overallStars">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <div class="rating-text" id="ratingText">请点击星星进行评分</div>
+                </div>
+            </div>
+
+            <!-- 多维度评分 -->
+            <div class="rating-section">
+                <div class="section-title">服务维度评分</div>
+                <div class="dimension-ratings">
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <span class="dimension-name">🎯 服务态度</span>
+                            <div class="dimension-stars" data-dimension="attitude">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <span class="dimension-name">💼 专业能力</span>
+                            <div class="dimension-stars" data-dimension="professionalism">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <span class="dimension-name">⚡ 响应速度</span>
+                            <div class="dimension-stars" data-dimension="speed">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <span class="dimension-name">🎨 服务质量</span>
+                            <div class="dimension-stars" data-dimension="quality">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评论区 -->
+            <div class="comment-section">
+                <div class="section-title">详细评价</div>
+                <textarea 
+                    class="comment-input" 
+                    id="commentText" 
+                    placeholder="分享您对胡椒粉服务的真实感受，您的评价将帮助TA做得更好...&#10;&#10;可以谈谈：&#10;• 服务过程中的亮点&#10;• 印象深刻的细节&#10;• 改进建议"></textarea>
+                
+                <div class="user-info">
+                    <input type="text" class="input-field" id="userName" placeholder="您的昵称">
+                    <input type="text" class="input-field" id="userContact" placeholder="联系方式（可选）">
+                </div>
+
+                <button class="submit-btn" onclick="submitReview()">
+                    📝 提交评价
+                </button>
+            </div>
+
+            <!-- 历史评价列表 -->
+            <div class="reviews-list">
+                <div class="section-title">历史评价 (<span id="reviewCount">0</span>)</div>
+                <div id="reviewsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 评分数据
+        let ratings = {
+            overall: 0,
+            attitude: 0,
+            professionalism: 0,
+            speed: 0,
+            quality: 0
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReviews();
+            initRatingSystem();
+            updateStats();
+        });
+
+        // 初始化评分系统
+        function initRatingSystem() {
+            // 整体评分
+            const overallStars = document.querySelectorAll('#overallStars .star');
+            overallStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    ratings.overall = rating;
+                    updateStars(overallStars, rating);
+                    updateRatingText(rating);
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    updateStars(overallStars, rating);
+                });
+            });
+
+            document.getElementById('overallStars').addEventListener('mouseleave', function() {
+                updateStars(overallStars, ratings.overall);
+                updateRatingText(ratings.overall);
+            });
+
+            // 维度评分
+            const dimensions = document.querySelectorAll('.dimension-stars');
+            dimensions.forEach(dimensionStars => {
+                const dimension = dimensionStars.getAttribute('data-dimension');
+                const stars = dimensionStars.querySelectorAll('.star');
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const rating = parseInt(this.getAttribute('data-rating'));
+                        ratings[dimension] = rating;
+                        updateStars(stars, rating);
+                    });
+
+                    star.addEventListener('mouseenter', function() {
+                        const rating = parseInt(this.getAttribute('data-rating'));
+                        updateStars(stars, rating);
+                    });
+                });
+
+                dimensionStars.addEventListener('mouseleave', function() {
+                    updateStars(stars, ratings[dimension]);
+                });
+            });
+        }
+
+        // 更新星星显示
+        function updateStars(stars, rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // 更新评分文字
+        function updateRatingText(rating) {
+            const texts = ['', '非常不满意 😢', '不满意 😕', '一般般 😐', '满意 😊', '非常满意 😍'];
+            document.getElementById('ratingText').textContent = texts[rating] || '请点击星星进行评分';
+        }
+
+        // 提交评价
+        function submitReview() {
+            const userName = document.getElementById('userName').value.trim();
+            const comment = document.getElementById('commentText').value.trim();
+            const userContact = document.getElementById('userContact').value.trim();
+
+            // 验证
+            if (!userName) {
+                alert('请填写您的昵称');
+                return;
+            }
+
+            if (ratings.overall === 0) {
+                alert('请为整体服务进行评分');
+                return;
+            }
+
+            if (!comment) {
+                alert('请填写详细评价');
+                return;
+            }
+
+            // 创建评价对象
+            const review = {
+                id: Date.now(),
+                userName: userName,
+                userContact: userContact,
+                ratings: { ...ratings },
+                comment: comment,
+                timestamp: new Date().toISOString()
+            };
+
+            // 保存评价
+            saveReview(review);
+
+            // 显示成功消息
+            showSuccessMessage();
+
+            // 重置表单
+            resetForm();
+
+            // 重新加载评价列表
+            loadReviews();
+            updateStats();
+        }
+
+        // 保存评价到 localStorage
+        function saveReview(review) {
+            let reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            reviews.unshift(review);
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+        }
+
+        // 加载评价列表
+        function loadReviews() {
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            const reviewsList = document.getElementById('reviewsList');
+            const reviewCount = document.getElementById('reviewCount');
+
+            reviewCount.textContent = reviews.length;
+
+            if (reviews.length === 0) {
+                reviewsList.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <p>暂无评价，快来成为第一个评价的人吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            reviewsList.innerHTML = reviews.map(review => {
+                const timeAgo = getTimeAgo(new Date(review.timestamp));
+                const stars = '★'.repeat(review.ratings.overall) + '☆'.repeat(5 - review.ratings.overall);
+                
+                return `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div>
+                                <div class="reviewer-name">${escapeHtml(review.userName)}</div>
+                                <div class="review-time">${timeAgo}</div>
+                            </div>
+                            <div class="review-rating">${stars}</div>
+                        </div>
+                        <div class="review-comment">${escapeHtml(review.comment)}</div>
+                        <div class="dimension-scores">
+                            <span class="dimension-score">服务态度: ${'★'.repeat(review.ratings.attitude)}</span>
+                            <span class="dimension-score">专业能力: ${'★'.repeat(review.ratings.professionalism)}</span>
+                            <span class="dimension-score">响应速度: ${'★'.repeat(review.ratings.speed)}</span>
+                            <span class="dimension-score">服务质量: ${'★'.repeat(review.ratings.quality)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            
+            if (reviews.length === 0) {
+                document.getElementById('avgRating').textContent = '0.0';
+                document.getElementById('totalReviews').textContent = '0';
+                document.getElementById('recommendRate').textContent = '0%';
+                return;
+            }
+
+            // 平均评分
+            const avgRating = reviews.reduce((sum, r) => sum + r.ratings.overall, 0) / reviews.length;
+            document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+
+            // 总评价数
+            document.getElementById('totalReviews').textContent = reviews.length;
+
+            // 推荐率（4星及以上）
+            const recommendCount = reviews.filter(r => r.ratings.overall >= 4).length;
+            const recommendRate = (recommendCount / reviews.length * 100).toFixed(0);
+            document.getElementById('recommendRate').textContent = recommendRate + '%';
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('userName').value = '';
+            document.getElementById('userContact').value = '';
+            document.getElementById('commentText').value = '';
+            
+            ratings = {
+                overall: 0,
+                attitude: 0,
+                professionalism: 0,
+                speed: 0,
+                quality: 0
+            };
+
+            // 重置所有星星
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('active');
+            });
+
+            updateRatingText(0);
+        }
+
+        // 显示成功消息
+        function showSuccessMessage() {
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.textContent = '✨ 评价提交成功！感谢您的反馈';
+            document.body.appendChild(message);
+
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        // 计算时间差
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            if (seconds < 60) return '刚刚';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}分钟前`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}小时前`;
+            if (seconds < 2592000) return `${Math.floor(seconds / 86400)}天前`;
+            
+            return date.toLocaleDateString('zh-CN');
+        }
+
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
+
